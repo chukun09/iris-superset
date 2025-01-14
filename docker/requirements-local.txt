@@ -1,0 +1,2 @@
+cx_Oracle
+authlib==0.15.5

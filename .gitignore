@@ -115,7 +115,7 @@ superset/translations/**/messages.mo
 #docker/requirements-local.txt
 
 cache/
-docker/*local*
+#docker/*local*
 
 .temp_cache
 
