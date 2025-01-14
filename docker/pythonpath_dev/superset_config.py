@@ -42,6 +42,7 @@ EXAMPLES_HOST = os.getenv("EXAMPLES_HOST")
 EXAMPLES_PORT = os.getenv("EXAMPLES_PORT")
 EXAMPLES_DB = os.getenv("EXAMPLES_DB")
 
+IDENTITY_SERVER_BASE_URL = os.getenv("IDENTITY_SERVER_BASE_URL")
 # The SQLAlchemy connection string.
 SQLALCHEMY_DATABASE_URI = (
     f"{DATABASE_DIALECT}://"
@@ -158,11 +159,11 @@ OAUTH_PROVIDERS = [{
     'remote_app': {
         'client_id':'super_set_client',
         'client_secret':'8ffd45d4-cf22-44c6-a4a4-57ed965f22c5',
-        'server_metadata_url': 'https://identityserver-dev.anews.vn/.well-known/openid-configuration',
+        'server_metadata_url': f'{IDENTITY_SERVER_BASE_URL}/.well-known/openid-configuration',
        # 'userinfo_url': 'https://identityserver-dev.anews.vn/connect/userinfo',
        # 'authorize_url': 'https://identityserver-dev.anews.vn/connect/authorize',
         #'access_token_url': 'https://identityserver-dev.anews.vn/connect/token',
-        'api_base_url':'https://identityserver-dev.anews.vn/connect/',
+        'api_base_url': f'{IDENTITY_SERVER_BASE_URL}/connect/',
          'access_token_params':{        # Additional parameters for calls to access_token_url
                'client_id':'super_set_client'
           },
