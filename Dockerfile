@@ -115,6 +115,21 @@ RUN ./scripts/translations/generate_mo_files.sh \
     && rm superset/translations/messages.pot \
     && rm superset/translations/*/LC_MESSAGES/*.po
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+         unzip libaio1 \
+    && apt-get autoremove -yqq --purge \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -pv /opt/oracle \
+    && chown -R "superset:root" /opt/oracle \
+    && cd /opt/oracle \
+    && curl -Lf "https://download.oracle.com/otn_software/linux/instantclient/185000/instantclient-basic-linux.x64-18.5.0.0.0dbru.zip?xd_co_f=<oracle-random-key>" \
+         --output oracle-instantclient-18-5.zip \
+    && unzip ./oracle-instantclient-18-5.zip \
+    && rm -f ./oracle-instantclient-18-5.zip \
+    && echo "/opt/oracle/instantclient_18_5" > /etc/ld.so.conf.d/oracle-instantclient.conf \
+    && ldconfig
 COPY --chmod=755 ./docker/run-server.sh /usr/bin/
 USER superset
 

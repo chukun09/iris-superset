@@ -25,6 +25,7 @@ import os
 
 from celery.schedules import crontab
 from flask_caching.backends.filesystemcache import FileSystemCache
+from flask_appbuilder.security.manager import AUTH_OAUTH
 
 logger = logging.getLogger()
 
@@ -97,13 +98,93 @@ class CeleryConfig:
 
 CELERY_CONFIG = CeleryConfig
 
-FEATURE_FLAGS = {"ALERT_REPORTS": True}
+FEATURE_FLAGS = {"ALERT_REPORTS": True,
+                 "DASHBOARD_RBAC": True,
+                "ENABLE_TEMPLATE_PROCESSING": True,
+                 "DASHBOARD_NATIVE_FILTERS": True,
+                 "DASHBOARD_CROSS_FILTERS": True
+                 }
 ALERT_REPORTS_NOTIFICATION_DRY_RUN = True
 WEBDRIVER_BASEURL = "http://superset:8088/"  # When using docker compose baseurl should be http://superset_app:8088/
 # The base URL for the email report hyperlinks.
 WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 SQLLAB_CTAS_NO_LIMIT = True
+#CORS_OPTIONS = { "supports_credentials": True, "allow_headers": "", "expose_headers": "", "resources": "", "origins": [""] }
+#OVERRIDE_HTTP_HEADERS = {'X-Frame-Options': 'ALLOWALL'}
+TALISMAN_ENABLED = True
+TALISMAN_DEV_CONFIG = {
+    "content_security_policy": {
+        "base-uri": ["'self'"],
+        "default-src": ["'self'"],
+        "img-src": [
+            "'self'",
+            "blob:",
+            "data:",
+            "https://apachesuperset.gateway.scarf.sh",
+            "https://static.scarf.sh/",
+            "https://avatars.slack-edge.com",
+            "ows.terrestris.de",
+        ],
+        "worker-src": ["'self'", "blob:"],
+        "connect-src": [
+            "'self'",
+            "https://api.mapbox.com",
+            "https://events.mapbox.com",
+        ],
+        "object-src": "'none'",
+        "style-src": [
+            "'self'",
+            "'unsafe-inline'",
+        ],
+         "frame-ancestors": ["*", "127.0.0.1", "localhost"],
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+    },
+    "content_security_policy_nonce_in": ["script-src"],
+    "force_https": False,
+    "session_cookie_secure": False,
+    }
 
+ENABLE_CORS = True
+#HTTP_HEADERS={"X-Frame-Options":"", "Content-Security-Policy": "frame-ancestors *"}
+#HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"} 
+# Authen OpenID
+AUTH_TYPE = AUTH_OAUTH
+
+CSRF_ENABLED = True
+OAUTH_PROVIDERS = [{
+    'name':'open_id_provider',
+    'icon': 'fa-address-card',
+    'token_key':'access_token',
+    'remote_app': {
+        'client_id':'super_set_client',
+        'client_secret':'8ffd45d4-cf22-44c6-a4a4-57ed965f22c5',
+        'server_metadata_url': 'https://identityserver-dev.anews.vn/.well-known/openid-configuration',
+       # 'userinfo_url': 'https://identityserver-dev.anews.vn/connect/userinfo',
+       # 'authorize_url': 'https://identityserver-dev.anews.vn/connect/authorize',
+        #'access_token_url': 'https://identityserver-dev.anews.vn/connect/token',
+        'api_base_url':'https://identityserver-dev.anews.vn/connect/',
+         'access_token_params':{        # Additional parameters for calls to access_token_url
+               'client_id':'super_set_client'
+          },
+        'client_kwargs':{
+            'scope': 'openid email profile',
+            'code_challenge_method': 'S256'
+        },
+         'access_token_headers':{    # Additional headers for calls to access_token_url
+               'Authorization': 'Basic Base64EncodedClientIdAndSecret'
+            },
+       #'jwks_uri': 'https://identityserver-dev.anews.vn/.well-known/openid-configuration/jwks',
+       #'userinfo_endpoint': 'https://identityserver-dev.anews.vn/connect/userinfo'
+    }
+}]
+PUBLIC_ROLE_LIKE = 'Gamma'
+GUEST_ROLE_NAME = "Alpha"
+AUTH_USER_REGISTRATION = True
+#AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Gamma'"
+AUTH_USER_REGISTRATION_ROLE = 'Alpha'
+from custom_sso_security_manager import CustomSsoSecurityManager
+CUSTOM_SECURITY_MANAGER = CustomSsoSecurityManager
+#AUTH_ROLE_PUBLIC = 'Public'
 #
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden
