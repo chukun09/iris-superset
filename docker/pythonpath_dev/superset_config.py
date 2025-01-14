@@ -184,8 +184,9 @@ OAUTH_PROVIDERS = [{
 PUBLIC_ROLE_LIKE = 'Gamma'
 GUEST_ROLE_NAME = "Alpha"
 AUTH_USER_REGISTRATION = True
-#AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Gamma'"
-AUTH_USER_REGISTRATION_ROLE = 'Alpha'
+AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Alpha'"
+#ATH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Alpha'"
+#AUTH_USER_REGISTRATION_ROLE = 'Alpha'
 from custom_sso_security_manager import CustomSsoSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSsoSecurityManager
 #AUTH_ROLE_PUBLIC = 'Public'
