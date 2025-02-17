@@ -177,7 +177,7 @@ OAUTH_PROVIDERS = [{
 PUBLIC_ROLE_LIKE = 'Gamma'
 GUEST_ROLE_NAME = "Gamma"
 AUTH_USER_REGISTRATION = True
-AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Alpha'"
+AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_admin' && 'Admin' || 'Alpha'"
 from custom_sso_security_manager import CustomSsoSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSsoSecurityManager
 # Optionally import superset_config_docker.py (which will have been included on
