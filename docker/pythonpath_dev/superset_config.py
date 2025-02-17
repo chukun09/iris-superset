@@ -163,7 +163,7 @@ OAUTH_PROVIDERS = [{
         'server_metadata_url': f'{IDENTITY_SERVER_BASE_URL}/.well-known/openid-configuration',
         'api_base_url': f'{IDENTITY_SERVER_BASE_URL}/connect/',
          'access_token_params':{        # Additional parameters for calls to access_token_url
-               'client_id':'super_set_client'
+               'client_id': f'{OPENID_CLIENT_ID}'
           },
         'client_kwargs':{
             'scope': 'openid email profile',
