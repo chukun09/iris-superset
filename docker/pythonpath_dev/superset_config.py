@@ -42,6 +42,10 @@ EXAMPLES_HOST = os.getenv("EXAMPLES_HOST")
 EXAMPLES_PORT = os.getenv("EXAMPLES_PORT")
 EXAMPLES_DB = os.getenv("EXAMPLES_DB")
 
+OPENID_CLIENT_ID = os.getenv("OPENID_CLIENT_ID")
+OPENID_CLIENT_SECRET = os.getenv("OPENID_CLIENT_SECRET")
+
+IDENTITY_SERVER_BASE_URL = os.getenv("IDENTITY_SERVER_BASE_URL")
 # The SQLAlchemy connection string.
 SQLALCHEMY_DATABASE_URI = (
     f"{DATABASE_DIALECT}://"
@@ -98,7 +102,12 @@ class CeleryConfig:
 
 CELERY_CONFIG = CeleryConfig
 
-FEATURE_FLAGS = {"ALERT_REPORTS": True}
+FEATURE_FLAGS = {"ALERT_REPORTS": True,
+                 "DASHBOARD_RBAC": True,
+                "ENABLE_TEMPLATE_PROCESSING": True,
+                 "DASHBOARD_NATIVE_FILTERS": True,
+                 "DASHBOARD_CROSS_FILTERS": True
+                 }
 ALERT_REPORTS_NOTIFICATION_DRY_RUN = True
 WEBDRIVER_BASEURL = "http://superset:8088/"  # When using docker compose baseurl should be http://superset_app:8088/  # noqa: E501
 # The base URL for the email report hyperlinks.
@@ -124,6 +133,71 @@ if os.getenv("CYPRESS_CONFIG") == "true":
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden
 #
+TALISMAN_ENABLED = True
+TALISMAN_DEV_CONFIG = {
+    "content_security_policy": {
+        "base-uri": ["'self'"],
+        "default-src": ["'self'"],
+        "img-src": [
+            "'self'",
+            "blob:",
+            "data:",
+            "https://apachesuperset.gateway.scarf.sh",
+            "https://static.scarf.sh/",
+            "https://avatars.slack-edge.com",
+            "ows.terrestris.de",
+        ],
+        "worker-src": ["'self'", "blob:"],
+        "connect-src": [
+            "'self'",
+            "https://api.mapbox.com",
+            "https://events.mapbox.com",
+        ],
+        "object-src": "'none'",
+        "style-src": [
+            "'self'",
+            "'unsafe-inline'",
+        ],
+         "frame-ancestors": ["*", "127.0.0.1", "localhost"],
+        "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+    },
+    "content_security_policy_nonce_in": ["script-src"],
+    "force_https": False,
+    "session_cookie_secure": False,
+    }
+
+ENABLE_CORS = True
+# Authen OpenID
+AUTH_TYPE = AUTH_OAUTH
+
+CSRF_ENABLED = True
+OAUTH_PROVIDERS = [{
+    'name':'open_id_provider',
+    'icon': 'fa-address-card',
+    'token_key':'access_token',
+    'remote_app': {
+        'client_id': f'{OPENID_CLIENT_ID}',
+        'client_secret': f'{OPENID_CLIENT_SECRET}',
+        'server_metadata_url': f'{IDENTITY_SERVER_BASE_URL}/.well-known/openid-configuration',
+        'api_base_url': f'{IDENTITY_SERVER_BASE_URL}/connect/',
+         'access_token_params':{        # Additional parameters for calls to access_token_url
+               'client_id':'super_set_client'
+          },
+        'client_kwargs':{
+            'scope': 'openid email profile',
+            'code_challenge_method': 'S256'
+        },
+         'access_token_headers':{    # Additional headers for calls to access_token_url
+               'Authorization': 'Basic Base64EncodedClientIdAndSecret'
+            },
+    }
+}]
+PUBLIC_ROLE_LIKE = 'Gamma'
+GUEST_ROLE_NAME = "Gamma"
+AUTH_USER_REGISTRATION = True
+AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Alpha'"
+from custom_sso_security_manager import CustomSsoSecurityManager
+CUSTOM_SECURITY_MANAGER = CustomSsoSecurityManager
 try:
     import superset_config_docker
     from superset_config_docker import *  # noqa
