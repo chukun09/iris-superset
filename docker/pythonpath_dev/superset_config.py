@@ -149,8 +149,6 @@ TALISMAN_DEV_CONFIG = {
     }
 
 ENABLE_CORS = True
-#HTTP_HEADERS={"X-Frame-Options":"", "Content-Security-Policy": "frame-ancestors *"}
-#HTTP_HEADERS={"X-Frame-Options":"ALLOWALL"} 
 # Authen OpenID
 AUTH_TYPE = AUTH_OAUTH
 
@@ -163,9 +161,6 @@ OAUTH_PROVIDERS = [{
         'client_id': f'{OPENID_CLIENT_ID}',
         'client_secret': f'{OPENID_CLIENT_SECRET}',
         'server_metadata_url': f'{IDENTITY_SERVER_BASE_URL}/.well-known/openid-configuration',
-       # 'userinfo_url': 'https://identityserver-dev.anews.vn/connect/userinfo',
-       # 'authorize_url': 'https://identityserver-dev.anews.vn/connect/authorize',
-        #'access_token_url': 'https://identityserver-dev.anews.vn/connect/token',
         'api_base_url': f'{IDENTITY_SERVER_BASE_URL}/connect/',
          'access_token_params':{        # Additional parameters for calls to access_token_url
                'client_id':'super_set_client'
@@ -177,20 +172,14 @@ OAUTH_PROVIDERS = [{
          'access_token_headers':{    # Additional headers for calls to access_token_url
                'Authorization': 'Basic Base64EncodedClientIdAndSecret'
             },
-       #'jwks_uri': 'https://identityserver-dev.anews.vn/.well-known/openid-configuration/jwks',
-       #'userinfo_endpoint': 'https://identityserver-dev.anews.vn/connect/userinfo'
     }
 }]
 PUBLIC_ROLE_LIKE = 'Gamma'
-GUEST_ROLE_NAME = "Alpha"
+GUEST_ROLE_NAME = "Gamma"
 AUTH_USER_REGISTRATION = True
 AUTH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Alpha'"
-#ATH_USER_REGISTRATION_ROLE_JMESPATH = "username == 'longtd_test' && 'Admin' || 'Alpha'"
-#AUTH_USER_REGISTRATION_ROLE = 'Alpha'
 from custom_sso_security_manager import CustomSsoSecurityManager
 CUSTOM_SECURITY_MANAGER = CustomSsoSecurityManager
-#AUTH_ROLE_PUBLIC = 'Public'
-#
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden
 #
